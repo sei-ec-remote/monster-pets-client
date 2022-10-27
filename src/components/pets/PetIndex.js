@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react' 
 import { Link } from 'react-router-dom'
-import { petIndex } from '../api/pet'
+import { petIndex } from '../../api/pet'
 
 const PetIndex = ({ user, msgAlert }) => {
 
@@ -22,16 +22,16 @@ const PetIndex = ({ user, msgAlert }) => {
 
     const allPetsJSX = allPets.map(pet => {
         return (
-            <Link to={pet._id} key={pet._id}>
-            <li>Name: {pet.name} type: {pet.type}</li>
+            <Link to={`/pets/${pet._id}`} key={pet._id}>
+                <li>Name: {pet.name} type: {pet.type}</li>
             </Link>
         )
     })
 
     return (
-        <>
+        <div className='container-md'>
             <ul>{allPetsJSX}</ul>
-        </>
+        </div>
     )
 }
 

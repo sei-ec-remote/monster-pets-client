@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react' 
 import { useParams, useNavigate } from 'react-router-dom'
-import { petDelete, petShow, petUpdate } from '../api/pet'
+import { petDelete, petShow, petUpdate } from '../../api/pet'
 import PetUpdate from './PetUpdate'
 
 const PetShow = ({ user, msgAlert }) => {
@@ -87,7 +87,7 @@ const PetShow = ({ user, msgAlert }) => {
     // }
 
     return (
-			<>
+			<div className='container-md'>
 				<h3>Name: {pet.name}</h3>
 				<p>Type: {pet.type}</p>
 				<button onClick={toggleShowUpdate}>Toggle Update</button>
@@ -99,7 +99,7 @@ const PetShow = ({ user, msgAlert }) => {
 					/>
 				)}
                 <button onClick={handleDeletePet} >Delete</button>
-			</>
+			</div>
 		)
 }
 

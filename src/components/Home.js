@@ -1,11 +1,13 @@
+import PetIndex from "./pets/PetIndex"
+
 const Home = (props) => {
-	// const { msgAlert, user } = props
-	console.log('props in home', props)
+	const { msgAlert } = props
 
 	return (
-		<>
-			<h2>Home Page</h2>
-		</>
+		<div className='container-md'>
+			<h2>All the pets</h2>
+			<PetIndex msgAlert={msgAlert}/>
+		</div>
 	)
 }
 

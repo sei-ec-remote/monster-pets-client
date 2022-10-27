@@ -17,20 +17,14 @@ export const petCreate = (data, user) => {
 export const petIndex = (user) => {
 	return axios({
 		method: 'GET',
-		url: apiUrl + '/pets',
-		headers: {
-			Authorization: `Token token=${user.token}`,
-		},
+		url: apiUrl + '/pets'
 	})
 }
 
 export const petShow = (user, id) => {
 	return axios({
 		method: 'GET',
-		url: apiUrl + '/pets/' + id,
-		headers: {
-			Authorization: `Token token=${user.token}`,
-		},
+		url: apiUrl + '/pets/' + id
 	})
 }
 
