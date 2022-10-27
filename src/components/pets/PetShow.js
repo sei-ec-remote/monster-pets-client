@@ -5,6 +5,7 @@ import { petDelete, petShow, petUpdate } from '../../api/pet'
 // import PetUpdate from './PetUpdate' <--no longer using in lieu of the modal
 import EditPetModal from './EditPetModal'
 import NewToyModal from '../toys/NewToyModal'
+import ShowToy from '../toys/ShowToy'
 
 const cardContainerLayout = {
     display: 'flex',
@@ -14,7 +15,7 @@ const cardContainerLayout = {
 
 const PetShow = ({ user, msgAlert }) => {
 
-    const [pet, setPet] = useState({})
+    const [pet, setPet] = useState(null)
     // const [isUpdateShown, setIsUpdateShown] = useState(false)
     const [editModalShow, setEditModalShow] = useState(false)
     const [toyModalShow, setToyModalShow] = useState(false)
@@ -26,28 +27,28 @@ const PetShow = ({ user, msgAlert }) => {
 
     useEffect(() => {
         petShow(user, id)
-        .then((res) => {
-            setPet(res.data.pet)
-        })
-        .catch((error) => {
-            msgAlert({
-                heading: 'Failure',
-                message: 'Show Pet Failure' + error,
-                variant: 'danger'
+            .then((res) => {
+                setPet(res.data.pet)
             })
-        })
+            .catch((error) => {
+                msgAlert({
+                    heading: 'Failure',
+                    message: 'Show Pet Failure' + error,
+                    variant: 'danger'
+                })
+            })
     }, [updated])
 
     // const toggleShowUpdate = () => {
     //     setIsUpdateShown(prevUpdateShown => !prevUpdateShown)
     // }
 
-    const handleChange = (event) => {
-        // to keep the values as users input info 
-        // first spread the current pet
-        // then comma and modify the key to the value you need
-        setPet({...pet, [event.target.name]: event.target.value})
-    }
+    // const handleChange = (event) => {
+    //     // to keep the values as users input info 
+    //     // first spread the current pet
+    //     // then comma and modify the key to the value you need
+    //     setPet({...pet, [event.target.name]: event.target.value})
+    // }
 
     // const handleUpdatePet = () => {
     //     petUpdate(pet, user, id)
@@ -87,6 +88,21 @@ const PetShow = ({ user, msgAlert }) => {
         })
     }
 
+    let toyCards
+    if (pet) {
+        if (pet.toys.length > 0) {
+            // map over the toys
+            // produce one ShowToy component for each of them
+            toyCards = pet.toys.map(toy => (
+                <ShowToy 
+                    key={toy._id}
+                    toy={toy}
+                    pet={pet}
+                />
+            ))
+        }
+    }
+
     // logical &&
     // both sides of this check NEED to be truthy values = true
     // logical ||
@@ -97,6 +113,10 @@ const PetShow = ({ user, msgAlert }) => {
     // if (deleted) {
     //     navigate('/pets')
     // }
+
+    if (!pet) {
+        return <p>...loading</p>
+    }
 
     return (
         <>
@@ -150,6 +170,9 @@ const PetShow = ({ user, msgAlert }) => {
                     )}
                     <button onClick={handleDeletePet} >Delete</button> */}
                 </Card>
+            </Container>
+            <Container style={cardContainerLayout}>
+                { toyCards }
             </Container>
             <EditPetModal 
                 user={user}
