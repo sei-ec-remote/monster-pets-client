@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react' 
 import { useParams, useNavigate } from 'react-router-dom'
+import { Container, Card, Button } from 'react-bootstrap'
 import { petDelete, petShow, petUpdate } from '../../api/pet'
 import PetUpdate from './PetUpdate'
+
+const cardContainerLayout = {
+    display: 'flex',
+    flexFlow: 'row wrap',
+    justifyContent: 'center'
+}
 
 const PetShow = ({ user, msgAlert }) => {
 
@@ -87,19 +94,50 @@ const PetShow = ({ user, msgAlert }) => {
     // }
 
     return (
-			<div className='container-md'>
-				<h3>Name: {pet.name}</h3>
-				<p>Type: {pet.type}</p>
-				<button onClick={toggleShowUpdate}>Toggle Update</button>
-				{isUpdateShown && (
-					<PetUpdate
-						pet={pet}
-						handleChange={handleChange}
-						handleUpdatePet={handleUpdatePet}
-					/>
-				)}
-                <button onClick={handleDeletePet} >Delete</button>
-			</div>
+			<Container className="fluid">
+                <Card>
+                <Card.Header>{ pet.fullTitle }</Card.Header>
+                <Card.Body>
+                    <Card.Text>
+                        <div><small>Age: { pet.age }</small></div>
+                        <div><small>Type: { pet.type }</small></div>
+                        <div>
+                            <small>
+                                Adoptable?: { pet.adoptable ? 'yes' : 'no' }
+                            </small>
+                        </div>
+                    </Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                    { 
+                        pet.owner && user && pet.owner._id === user._id 
+                        ?
+                        <>
+                            <Button>Edit Pet</Button>
+                            <Button onClick={() => handleDeletePet()}
+                                className="m-2"
+                                variant="danger"
+                            >
+                                Set { pet.name } Free
+                            </Button>
+                        </>
+                        :
+                        null
+                    }
+                </Card.Footer>
+                    {/* <h3>Name: {pet.name}</h3>
+                    <p>Type: {pet.type}</p>
+                    <button onClick={toggleShowUpdate}>Toggle Update</button>
+                    {isUpdateShown && (
+                        <PetUpdate
+                            pet={pet}
+                            handleChange={handleChange}
+                            handleUpdatePet={handleUpdatePet}
+                        />
+                    )}
+                    <button onClick={handleDeletePet} >Delete</button> */}
+                </Card>
+            </Container>
 		)
 }
 
