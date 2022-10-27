@@ -4,6 +4,7 @@ import { Container, Card, Button } from 'react-bootstrap'
 import { petDelete, petShow, petUpdate } from '../../api/pet'
 // import PetUpdate from './PetUpdate' <--no longer using in lieu of the modal
 import EditPetModal from './EditPetModal'
+import NewToyModal from '../toys/NewToyModal'
 
 const cardContainerLayout = {
     display: 'flex',
@@ -16,6 +17,7 @@ const PetShow = ({ user, msgAlert }) => {
     const [pet, setPet] = useState({})
     // const [isUpdateShown, setIsUpdateShown] = useState(false)
     const [editModalShow, setEditModalShow] = useState(false)
+    const [toyModalShow, setToyModalShow] = useState(false)
     const [deleted, setDeleted] = useState(false)
     const [updated, setUpdated] = useState(false)
 
@@ -113,6 +115,11 @@ const PetShow = ({ user, msgAlert }) => {
                     </Card.Text>
                 </Card.Body>
                 <Card.Footer>
+                    <Button onClick={() => setToyModalShow(true)}
+                        className="m-2" variant="info"
+                    >
+                        Give {pet.name} a toy!
+                    </Button>
                     { 
                         pet.owner && user && pet.owner._id === user._id 
                         ?
@@ -151,6 +158,14 @@ const PetShow = ({ user, msgAlert }) => {
                 msgAlert={msgAlert}
                 triggerRefresh={() => setUpdated(prev => !prev)}
                 handleClose={() => setEditModalShow(false)}
+            />
+            <NewToyModal 
+                user={user}
+                pet={pet}
+                show={toyModalShow}
+                msgAlert={msgAlert}
+                triggerRefresh={() => setUpdated(prev => !prev)}
+                handleClose={() => setToyModalShow(false)}
             />
         </>
     )
