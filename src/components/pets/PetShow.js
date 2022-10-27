@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Container, Card, Button } from 'react-bootstrap'
 import { petDelete, petShow, petUpdate } from '../../api/pet'
-import PetUpdate from './PetUpdate'
+// import PetUpdate from './PetUpdate' <--no longer using in lieu of the modal
+import EditPetModal from './EditPetModal'
 
 const cardContainerLayout = {
     display: 'flex',
@@ -13,8 +14,10 @@ const cardContainerLayout = {
 const PetShow = ({ user, msgAlert }) => {
 
     const [pet, setPet] = useState({})
-    const [isUpdateShown, setIsUpdateShown] = useState(false)
+    // const [isUpdateShown, setIsUpdateShown] = useState(false)
+    const [editModalShow, setEditModalShow] = useState(false)
     const [deleted, setDeleted] = useState(false)
+    const [updated, setUpdated] = useState(false)
 
     const { id } = useParams()
     const navigate = useNavigate()
@@ -31,11 +34,11 @@ const PetShow = ({ user, msgAlert }) => {
                 variant: 'danger'
             })
         })
-    }, [])
+    }, [updated])
 
-    const toggleShowUpdate = () => {
-        setIsUpdateShown(prevUpdateShown => !prevUpdateShown)
-    }
+    // const toggleShowUpdate = () => {
+    //     setIsUpdateShown(prevUpdateShown => !prevUpdateShown)
+    // }
 
     const handleChange = (event) => {
         // to keep the values as users input info 
@@ -44,23 +47,23 @@ const PetShow = ({ user, msgAlert }) => {
         setPet({...pet, [event.target.name]: event.target.value})
     }
 
-    const handleUpdatePet = () => {
-        petUpdate(pet, user, id)
-        .then(() => {
-            msgAlert({
-                heading: 'Success',
-                message: 'Updating Pet',
-                variant: 'success'
-            })
-        })
-        .catch((error) => {
-            msgAlert({
-                heading: 'Failure',
-                message: 'Update Pet Failure' + error,
-                variant: 'danger'
-            })
-        })
-    }
+    // const handleUpdatePet = () => {
+    //     petUpdate(pet, user, id)
+    //     .then(() => {
+    //         msgAlert({
+    //             heading: 'Success',
+    //             message: 'Updating Pet',
+    //             variant: 'success'
+    //         })
+    //     })
+    //     .catch((error) => {
+    //         msgAlert({
+    //             heading: 'Failure',
+    //             message: 'Update Pet Failure' + error,
+    //             variant: 'danger'
+    //         })
+    //     })
+    // }
 
     const handleDeletePet = () => {
         petDelete(user, id)
@@ -94,6 +97,7 @@ const PetShow = ({ user, msgAlert }) => {
     // }
 
     return (
+        <>
 			<Container className="fluid">
                 <Card>
                 <Card.Header>{ pet.fullTitle }</Card.Header>
@@ -113,7 +117,9 @@ const PetShow = ({ user, msgAlert }) => {
                         pet.owner && user && pet.owner._id === user._id 
                         ?
                         <>
-                            <Button>Edit Pet</Button>
+                            <Button onClick={() => setEditModalShow(true)} className="m-2" variant="warning">
+                                Edit Pet
+                            </Button>
                             <Button onClick={() => handleDeletePet()}
                                 className="m-2"
                                 variant="danger"
@@ -138,7 +144,16 @@ const PetShow = ({ user, msgAlert }) => {
                     <button onClick={handleDeletePet} >Delete</button> */}
                 </Card>
             </Container>
-		)
+            <EditPetModal 
+                user={user}
+                pet={pet}
+                show={editModalShow}
+                msgAlert={msgAlert}
+                triggerRefresh={() => setUpdated(prev => !prev)}
+                handleClose={() => setEditModalShow(false)}
+            />
+        </>
+    )
 }
 
 export default PetShow
