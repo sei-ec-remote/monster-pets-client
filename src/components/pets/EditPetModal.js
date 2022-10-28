@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import PetForm from '../shared/PetForm'
 import { petUpdate } from '../../api/pet'
+import messages from '../shared/AutoDismissAlert/messages'
 
 const EditPetModal = (props) => {
     const { 
@@ -48,7 +49,7 @@ const EditPetModal = (props) => {
             .then(() => {
                 msgAlert({
                     heading: 'Success',
-                    message: 'Updated pet!',
+                    message: messages.updatePetSuccess,
                     variant: 'success'
                 })
             })
@@ -56,7 +57,7 @@ const EditPetModal = (props) => {
             .catch((error) => {
                 msgAlert({
                     heading: 'Failure',
-                    message: 'Update Pet Failure' + error,
+                    message: messages.updatePetFailure + error,
                     variant: 'danger'
                 })
             })

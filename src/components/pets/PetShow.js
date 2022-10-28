@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react' 
 import { useParams, useNavigate } from 'react-router-dom'
 import { Container, Card, Button } from 'react-bootstrap'
-import { petDelete, petShow, petUpdate } from '../../api/pet'
+import { petDelete, petShow } from '../../api/pet'
 // import PetUpdate from './PetUpdate' <--no longer using in lieu of the modal
 import EditPetModal from './EditPetModal'
 import NewToyModal from '../toys/NewToyModal'
 import ShowToy from '../toys/ShowToy'
+import { updatePetSuccess, updatePetFailure } from '../shared/AutoDismissAlert/messages'
 
 const cardContainerLayout = {
     display: 'flex',
@@ -39,35 +40,6 @@ const PetShow = ({ user, msgAlert }) => {
             })
     }, [updated])
 
-    // const toggleShowUpdate = () => {
-    //     setIsUpdateShown(prevUpdateShown => !prevUpdateShown)
-    // }
-
-    // const handleChange = (event) => {
-    //     // to keep the values as users input info 
-    //     // first spread the current pet
-    //     // then comma and modify the key to the value you need
-    //     setPet({...pet, [event.target.name]: event.target.value})
-    // }
-
-    // const handleUpdatePet = () => {
-    //     petUpdate(pet, user, id)
-    //     .then(() => {
-    //         msgAlert({
-    //             heading: 'Success',
-    //             message: 'Updating Pet',
-    //             variant: 'success'
-    //         })
-    //     })
-    //     .catch((error) => {
-    //         msgAlert({
-    //             heading: 'Failure',
-    //             message: 'Update Pet Failure' + error,
-    //             variant: 'danger'
-    //         })
-    //     })
-    // }
-
     const handleDeletePet = () => {
         petDelete(user, id)
         .then(() => {
@@ -98,6 +70,9 @@ const PetShow = ({ user, msgAlert }) => {
                     key={toy._id}
                     toy={toy}
                     pet={pet}
+                    user={user}
+                    msgAlert={msgAlert}
+                    triggerRefresh={() => setUpdated(prev => !prev)}
                 />
             ))
         }
@@ -125,13 +100,11 @@ const PetShow = ({ user, msgAlert }) => {
                 <Card.Header>{ pet.fullTitle }</Card.Header>
                 <Card.Body>
                     <Card.Text>
-                        <div><small>Age: { pet.age }</small></div>
-                        <div><small>Type: { pet.type }</small></div>
-                        <div>
-                            <small>
-                                Adoptable?: { pet.adoptable ? 'yes' : 'no' }
-                            </small>
-                        </div>
+                        <small>Age: { pet.age }</small><br/>
+                        <small>Type: { pet.type }</small><br/>
+                        <small>
+                            Adoptable?: { pet.adoptable ? 'yes' : 'no' }
+                        </small><br/>
                     </Card.Text>
                 </Card.Body>
                 <Card.Footer>
@@ -170,6 +143,7 @@ const PetShow = ({ user, msgAlert }) => {
                     )}
                     <button onClick={handleDeletePet} >Delete</button> */}
                 </Card>
+            <h3>All of {pet.name}'s toys:</h3>
             </Container>
             <Container style={cardContainerLayout}>
                 { toyCards }

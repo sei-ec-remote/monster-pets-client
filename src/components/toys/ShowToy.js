@@ -1,8 +1,13 @@
 import React, { useState } from 'react'
 import { Card, Button } from 'react-bootstrap'
+import { deleteToy } from '../../api/toys'
+import EditToyModal from './EditToyModal'
 
 const ShowToy = (props) => {
-    const { toy, pet, user } = props
+    const { toy, pet, user, msgAlert, triggerRefresh } = props
+    console.log('this is the props', props)
+
+    const [editModalShow, setEditModalShow] = useState(false)
 
     // this will set the color of the card based on the condition
     const setBgCondition = (cond) => {
@@ -15,6 +20,26 @@ const ShowToy = (props) => {
         }
     }
 
+    // this function removes a toy, is only available to pet owner
+    const destroyToy = () => {
+        deleteToy(user, pet._id, toy._id)
+            .then(() => {
+                msgAlert({
+                    heading: 'Toy deleted!',
+                    message: 'Bye Bye toy!',
+                    variant: 'success'
+                })
+            })
+            .then(() => triggerRefresh())
+            .catch(() => {
+                msgAlert({
+                    heading: 'Oh no!',
+                    message: 'Something went wrong!',
+                    variant: 'danger'
+                })
+            })
+    }
+
     return (
         <>
             <Card className="m-2" style={setBgCondition(toy.condition)}>
@@ -23,10 +48,43 @@ const ShowToy = (props) => {
                     <small>{ toy.description }</small><br/>
                     <small>
                         { toy.isSqueaky ? 'squeak squeak' : 'stoic silence'}
-                    </small>
+                    </small><br/>
+                    <small>Condition: { toy.condition }</small>
                 </Card.Body>
-                <Card.Footer>Condition: { toy.condition }</Card.Footer>
+                <Card.Footer>
+                    { 
+                        user && pet.owner && user._id === pet.owner._id 
+                        ?
+                        <>
+                            <Button
+                                className="m-2" 
+                                variant="warning"
+                                onClick={() => setEditModalShow(true)}  
+                            >
+                                Edit Toy
+                            </Button>
+                            <Button 
+                                className="m-2"
+                                variant="danger"
+                                onClick={() => destroyToy()}
+                            >
+                                Delete Toy
+                            </Button>
+                        </>
+                        :
+                        null
+                    }
+                </Card.Footer>
             </Card>
+            <EditToyModal 
+                user={user}
+                pet={pet}
+                toy={toy}
+                msgAlert={msgAlert}
+                triggerRefresh={triggerRefresh}
+                show={editModalShow}
+                handleClose={() => setEditModalShow(false)}
+            />
         </>
     )
 }
