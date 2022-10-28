@@ -8,6 +8,7 @@ import NewToyModal from '../toys/NewToyModal'
 import ShowToy from '../toys/ShowToy'
 import LoadingScreen from '../shared/LoadingScreen'
 import { updatePetSuccess, updatePetFailure } from '../shared/AutoDismissAlert/messages'
+import images from '../shared/images'
 
 const cardContainerLayout = {
     display: 'flex',
@@ -100,6 +101,20 @@ const PetShow = ({ user, msgAlert }) => {
                 <Card>
                 <Card.Header>{ pet.fullTitle }</Card.Header>
                 <Card.Body>
+                    { 
+                        pet.type === "dog" 
+                        ?
+                        <Card.Img variant="top" src={`${images.dog}`}/>
+                        :
+                        null
+                    }
+                    { 
+                        pet.type === "cat" 
+                        ?
+                        <Card.Img variant="top" src={`${images.cat}`}/>
+                        :
+                        null
+                    }
                     <Card.Text>
                         <small>Age: { pet.age }</small><br/>
                         <small>Type: { pet.type }</small><br/>
