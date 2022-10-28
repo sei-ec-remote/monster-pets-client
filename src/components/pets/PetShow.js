@@ -6,6 +6,7 @@ import { petDelete, petShow } from '../../api/pet'
 import EditPetModal from './EditPetModal'
 import NewToyModal from '../toys/NewToyModal'
 import ShowToy from '../toys/ShowToy'
+import LoadingScreen from '../shared/LoadingScreen'
 import { updatePetSuccess, updatePetFailure } from '../shared/AutoDismissAlert/messages'
 
 const cardContainerLayout = {
@@ -90,7 +91,7 @@ const PetShow = ({ user, msgAlert }) => {
     // }
 
     if (!pet) {
-        return <p>...loading</p>
+        return <LoadingScreen />
     }
 
     return (

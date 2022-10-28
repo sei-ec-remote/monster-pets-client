@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Card } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { petIndex } from '../../api/pet'
+import LoadingScreen from '../shared/LoadingScreen'
 
 const cardContainerLayout = {
     display: 'flex',
@@ -27,14 +28,6 @@ const PetIndex = ({ user, msgAlert }) => {
         })
     }, [])
 
-    const allPetsJSX = allPets.map(pet => {
-        return (
-            <Link to={`/pets/${pet._id}`} key={pet._id}>
-                <li>Name: {pet.name} type: {pet.type}</li>
-            </Link>
-        )
-    })
-
     const petCards = allPets.map(pet => (
         <Card key={ pet.id } style={{ width: '30%', margin: 5 }}>
             <Card.Header>{ pet.fullTitle }</Card.Header>
@@ -46,9 +39,12 @@ const PetIndex = ({ user, msgAlert }) => {
         </Card>
     ))
 
+    if (!allPets) {
+        return <LoadingScreen />
+    }
+
     return (
         <div className='container-md' style={ cardContainerLayout }>
-            {/* <ul>{allPetsJSX}</ul> */}
             { petCards }
         </div>
     )
